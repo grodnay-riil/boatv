@@ -10,6 +10,7 @@ services:
         PROJECT_GID: ${PROJECT_GID}
         TARGET_ROS_WS: ${TARGET_ROS_WS}
     container_name: boatVdev
+    image: "${PROJECT_NAME}_dev"
     stdin_open: true 
     tty: true  
     user: "${PROJECT_UID}:${PROJECT_GID}"

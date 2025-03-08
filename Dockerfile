@@ -41,6 +41,7 @@ RUN id -u $PROJECT_USER 2>/dev/null || \
 RUN echo "source /usr/share/bash-completion/bash_completion" >> /home/$PROJECT_USER/.bashrc && \
     echo 'PS1="\[\e[32m\]\u@\h:\[\e[34m\]\w\[\e[m\]\[\e[33m\]\$(__git_ps1)\[\e[m\]$ "' >> /home/$PROJECT_USER/.bashrc 
 
+
 # Modify APT configuration to enable package caching for autocompletion
 RUN echo "#lines removed for autocomplete" > /etc/apt/apt.conf.d/docker-clean
 
@@ -65,7 +66,7 @@ RUN if [ -d "src" ]; then \
 
 # Source workspace by default
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/$PROJECT_USER/.bashrc && \
-    echo 'if [ -f /home/$PROJECT_USER/$PROJECT_NAME/install/setup.bash ]; then source /home/$PROJECT_USER/$PROJECT_NAME/install/setup.bash; fi' >> /home/$PROJECT_USER/.bashrc
-
+    echo 'if [ -f /home/$PROJECT_USER/$PROJECT_NAME/install/setup.bash ]; then source /home/$PROJECT_USER/$PROJECT_NAME/install/setup.bash; fi' >> /home/$PROJECT_USER/.bashrc && \
+    echo "export PROMPT_COMMAND='history -a' && export HISTFILE=/home/$PROJECT_USER/$PROJECT_NAME/.bash_history" 
 # Default command
 CMD ["bash"]
