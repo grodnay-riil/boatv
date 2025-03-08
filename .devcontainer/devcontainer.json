@@ -1,5 +1,6 @@
 {
+    "name": "${localEnv:PROJECT_NAME}",
     "dockerComposeFile": "../docker-compose.yml",
     "service": "dev",
-    "workspaceFolder": "${localEnv:TARGET_ROS_WS}"
+    "workspaceFolder": "${localEnv:TARGET_ROS_WS}"  
 }

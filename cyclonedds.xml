@@ -1,0 +1,11 @@
+<CycloneDDS>
+  <Domain>
+    <General>
+      <Interfaces>
+        <!-- Use only internal interfaces and loopback for DDS communication -->
+        <NetworkInterface address="127.0.0.1" multicast="true"/>
+      </Interfaces>
+      <DontRoute>true</DontRoute>
+    </General>
+  </Domain>
+</CycloneDDS>

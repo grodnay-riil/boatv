@@ -1,5 +1,12 @@
+name: ${PROJECT_NAME}
 services:
+  dockwater:
+    build:
+      dockerfile: Dockerfile.dockwater_humble
+    image: dockwater:humble
   dev:
+    depends_on:
+      - dockwater
     build:
       context: .
       args:
@@ -9,7 +16,7 @@ services:
         PROJECT_UID: ${PROJECT_UID}
         PROJECT_GID: ${PROJECT_GID}
         TARGET_ROS_WS: ${TARGET_ROS_WS}
-    container_name: boatVdev
+    container_name: boatvdev
     image: "${PROJECT_NAME}_dev"
     stdin_open: true 
     tty: true  
@@ -26,7 +33,11 @@ services:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
       - QT_QPA_PLATFORMTHEME=qt5ct
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
       - TARGET_ROS_WS=${TARGET_ROS_WS}
+      - LIBGL_ALWAYS_INDIRECT=1   # New: Allow indirect rendering
+      - MESA_GL_VERSION_OVERRIDE=4.6  # New: Override GL version for compatibility
     volumes:
       - .:${TARGET_ROS_WS}
       - .vscode:/home/${PROJECT_USER}/.vscode-server
@@ -36,6 +47,15 @@ services:
       - /dev/serial:/dev/serial
       - /dev/dri:/dev/dri
       - ~/.ssh:/home/${PROJECT_USER}/.ssh
+      - .gz:/home/${PROJECT_USER}/.gz
     network_mode: host
     privileged: true
     ipc: host
+    gpus: all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

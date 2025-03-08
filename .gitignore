@@ -38,3 +38,9 @@ Thumbs.db
 *.bak
 *.tmp
 *~
+
+# Gazebo model cache
+.gz
+
+# Bash history
+.bash_history
