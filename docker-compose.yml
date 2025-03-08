@@ -1,0 +1,40 @@
+services:
+  dev:
+    build:
+      context: .
+      args:
+        ROS_DIST: ${ROS_DIST}  # Default to 'humble' if not set
+        PROJECT_NAME: ${PROJECT_NAME}
+        PROJECT_USER: ${PROJECT_USER}
+        PROJECT_UID: ${PROJECT_UID}
+        PROJECT_GID: ${PROJECT_GID}
+        TARGET_ROS_WS: ${TARGET_ROS_WS}
+    container_name: boatVdev
+    stdin_open: true 
+    tty: true  
+    user: "${PROJECT_UID}:${PROJECT_GID}"
+    command: /bin/bash
+    environment:
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - CYCLONEDDS_URI=file:///home/${PROJECT_USER}/${PROJECT_NAME}/cyclonedds.xml
+      - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+      - PROJECT_NAME=${PROJECT_NAME}
+      - ROS_DIST=${ROS_DIST}
+      - PROJECT_USER=${PROJECT_USER}
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - QT_QPA_PLATFORMTHEME=qt5ct
+      - TARGET_ROS_WS=${TARGET_ROS_WS}
+    volumes:
+      - .:${TARGET_ROS_WS}
+      - .vscode:/home/${PROJECT_USER}/.vscode-server
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ~/.Xauthority:/home/${PROJECT_USER}/.Xauthority
+      - /dev/input:/dev/input
+      - /dev/serial:/dev/serial
+      - /dev/dri:/dev/dri
+      - ~/.ssh:/home/${PROJECT_USER}/.ssh
+    network_mode: host
+    privileged: true
+    ipc: host
