@@ -1,8 +1,10 @@
 # Use ROS_DIST to set the base image
-ARG ROS_DIST=humble
+ARG ROS_DIST=${ROS_DIST}
 FROM dockwater:${ROS_DIST}
 
 # Set up environment variables
+ARG ROS_DIST
+
 ARG PROJECT_NAME
 ARG PROJECT_USER
 ARG PROJECT_UID

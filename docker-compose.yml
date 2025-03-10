@@ -2,7 +2,7 @@ name: ${PROJECT_NAME}
 services:
   dockwater:
     build:
-      dockerfile: Dockerfile.dockwater_humble
+      dockerfile: Dockerfile.dockwater_${ROS_DIST}
     image: dockwater:humble
   dev:
     depends_on:
@@ -10,7 +10,7 @@ services:
     build:
       context: .
       args:
-        ROS_DIST: ${ROS_DIST}  # Default to 'humble' if not set
+        ROS_DIST: ${ROS_DIST}  
         PROJECT_NAME: ${PROJECT_NAME}
         PROJECT_USER: ${PROJECT_USER}
         PROJECT_UID: ${PROJECT_UID}

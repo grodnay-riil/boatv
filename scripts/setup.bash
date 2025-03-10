@@ -9,7 +9,7 @@ export PROJECT_NAME="$(basename "$PROJECT_HOST_DIR")"
 
 # Force set user and ROS distribution
 export PROJECT_USER="${PROJECT_NAME}user"
-export ROS_DIST="humble"  # options are humble, jazzy, foxy, galactic
+export ROS_DIST="humble"  # options are only humble
 export ROS_DOMAIN_ID="1"
 
 # Set project directory environment variable
@@ -22,11 +22,17 @@ export PROJECT_GID=$(id -g)
 # Add the scripts directory to the PATH forcefully
 export PATH="$SCRIPT_DIR:$PATH"
 
-# Force set the target ROS workspace
+# Set the target ROS workspace in docker
 export TARGET_ROS_WS="/home/$PROJECT_USER/$PROJECT_NAME"
+
+# Set the robot IP and user
+export ROBOT_IP=10.42.0.2
+export ROBOT_USER=forecr
 
 # Print configuration details
 echo "================= ROS Docker Setup ================="
+echo "Robot IP            : $ROBOT_IP"
+echo "Robot User          : $ROBOT_USER"
 echo "Project Name        : $PROJECT_NAME"
 echo "Project User        : $PROJECT_USER (UID: $PROJECT_UID, GID: $PROJECT_GID)"
 echo "Project Host Dir    : $PROJECT_HOST_DIR"
