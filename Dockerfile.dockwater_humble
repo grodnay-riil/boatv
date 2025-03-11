@@ -60,11 +60,13 @@ RUN sudo apt update && sudo apt install locales \
 
 ARG ROSDIST=humble
 
-# Set up repo to install Ignition
-RUN /bin/sh -c 'wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg' \
-  && /bin/sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null'
+# Install Gazebo Garden - for vrx env
+RUN sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+        && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
+        && sudo apt-get update \
+        && sudo apt-get install -y --fix-missing gz-garden
 
-  # Install some 'standard' ROS packages and utilities.
+#   Install some 'standard' ROS packages and utilities.
 RUN apt update \
   && apt install -y --no-install-recommends \
      python3-colcon-common-extensions \
@@ -79,7 +81,7 @@ RUN apt update \
      ros-${ROSDIST}-joy-linux \
      ros-${ROSDIST}-mavros-msgs \
      ros-${ROSDIST}-navigation2 \
-     ros-${ROSDIST}-nav2-bringup \
+     ros-${ROSDIST}-nav2-bringup \     
      ros-${ROSDIST}-turtlebot3 \
      ros-${ROSDIST}-radar-msgs \
      ros-${ROSDIST}-ros-gzgarden \
@@ -102,4 +104,3 @@ RUN apt update \
  && rm -rf /var/lib/apt/lists/* \
  &&  apt clean -qq
 
- RUN apt-get update && apt-get -y install gz-garden
