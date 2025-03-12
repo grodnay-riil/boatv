@@ -2,8 +2,11 @@
     "name": "${localEnv:VERA_PROJECT_NAME}",
     "dockerComposeFile": "../docker-compose.yml",
     "service": "dev",
-    "workspaceFolder": "${localEnv:TARGET_ROS_WS}",
-    "shutdownAction": "stopCompose",
+    "workspaceFolder": "${localEnv:VERA_DOCKER_DIR}",
+    "shutdownAction": "none", //"stopCompose",
+    "mounts": [
+        "source=vscode-server,target=/home/verauser/.vscode-server,type=volume"
+    ]
     "customizations": {
         "vscode": {
             "extensions": [
@@ -15,3 +18,4 @@
             ]
         }
     }
+}

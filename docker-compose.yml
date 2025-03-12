@@ -43,7 +43,7 @@ services:
       - .:${VERA_DOCKER_DIR}
       #development chain persistent
       - ~/.ssh:/home/${VERA_DOCKER_USER}/.ssh #share keys with host
-      - .vscode:/home/${VERA_DOCKER_USER}/.vscode-server #vscode cache
+      #- .vscode:/home/${VERA_DOCKER_USER}/.vscode-server #vscode cache
       - .gz:/home/${VERA_DOCKER_USER}/.gz #gazebo worlds cache
       #hardware access
       - /tmp/.X11-unix:/tmp/.X11-unix

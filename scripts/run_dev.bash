@@ -14,13 +14,13 @@ cd "$VERA_HOST_DIR"
 
 # Start the container
 if docker compose up -d "dev"; then
-    echo "-----------------------------------------"
-    echo "Container '\e[32m${VERA_PROJECT_NAME}_dev'\e[0m started successfully!"
-    echo "Next steps:"
-    echo "➡️  Run '\e[32m./join_dev.bash\e[0m' to attach to the container."
-    echo "➡️  Or use '\e[32mccd\e[0m' to navigate to the project directory."
-    echo "➡️  Then run '\e[32mcode .\e[0m' to open the project in VS Code."
-    echo "-----------------------------------------"
+    echo -e  "-----------------------------------------"
+    echo -e  "Container '\e[32m${VERA_PROJECT_NAME}_dev'\e[0m started successfully!"
+    echo -e  "Next steps:"
+    echo -e  "Run '\e[32mjoin_dev.bash\e[0m' to attach to the container."
+    echo -e  "Or use '\e[32mccd\e[0m' to navigate to the project directory."
+    echo -e  "Then run '\e[32mcode .\e[0m' to open the project in VS Code."
+    echo -e  "-----------------------------------------"
 else
     echo "❌ Failed to start the container. Please check logs and try again."
 fi
