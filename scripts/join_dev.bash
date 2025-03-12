@@ -9,4 +9,4 @@ fi
 
 ### --- ATTACH TO RUNNING CONTAINER --- ###
 cd "$VERA_HOST_DIR"
-docker compose exec "${VERA_PROJECT_NAME}_dev" bash
+docker compose exec "dev" bash

@@ -4,7 +4,7 @@
 set -e
 
 # Ensure the project directory is set
-if [ -z "$PROJECT_HOST_DIR" ]; then
+if [ -z "$VERA_HOST_DIR" ]; then
     echo "❌ ERROR: Please source setup.bash first!"
     exit 1
 fi
@@ -16,14 +16,14 @@ if ! docker info > /dev/null 2>&1; then
 fi
 
 # Check if docker-compose.yml exists
-if [ ! -f "$PROJECT_HOST_DIR/docker-compose.yml" ]; then
-    echo "❌ ERROR: docker-compose.yml not found in $PROJECT_HOST_DIR!"
+if [ ! -f "$VERA_HOST_DIR/docker-compose.yml" ]; then
+    echo "❌ ERROR: docker-compose.yml not found in $VERA_HOST_DIR!"
     exit 1
 fi
 
 # Move to project directory and build containers
-echo "🔄 Building all Docker containers for project at $PROJECT_HOST_DIR..."
-cd "$PROJECT_HOST_DIR"
+echo "🔄 Building all Docker containers for project at $VERA_HOST_DIR..."
+cd "$VERA_HOST_DIR"
 
 export COMPOSE_BAKE=true
 
