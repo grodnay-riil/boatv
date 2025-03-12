@@ -22,7 +22,12 @@ git clone https://github.com/RIILTECH/vera.git --recurse-submodules
 ```
 
 ### 1. Environment Setup
+I assume you already have ```docker``` and ```vscode``` installed on host.
+Optional for faster docker builds.
 
+```bash
+sudo apt-get install apt-cacher-ng -y
+```
 Source the setup script to configure your environment:
 
 ```bash
