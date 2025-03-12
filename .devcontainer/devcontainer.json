@@ -1,6 +1,17 @@
 {
-    "name": "${localEnv:PROJECT_NAME}",
+    "name": "${localEnv:VERA_PROJECT_NAME}",
     "dockerComposeFile": "../docker-compose.yml",
     "service": "dev",
-    "workspaceFolder": "${localEnv:TARGET_ROS_WS}"  
-}
+    "workspaceFolder": "${localEnv:TARGET_ROS_WS}",
+    "shutdownAction": "stopCompose",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "donjayamanne.git-extension-pack",
+                "ms-vscode-remote.vscode-remote-extensionpack",
+                "donjayamanne.python-extension-pack",
+                "redhat.vscode-xml",
+                "streetsidesoftware.code-spell-checker"
+            ]
+        }
+    }

@@ -1,43 +1,34 @@
 #!/bin/bash
 
-# Determine the script's directory and project root
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_HOST_DIR="$(dirname "$SCRIPT_DIR")"
-
-# Force set project name based on the directory name
-export PROJECT_NAME="$(basename "$PROJECT_HOST_DIR")"
-
-# Force set user and ROS distribution
-export PROJECT_USER="${PROJECT_NAME}user"
-export ROS_DIST="humble"  # options are only humble
+### --- GENERAL CONFIGURATION --- ###
+export VERA_MODEL=${VERA_MODEL:-generic}
+export VERA_ROS_DIST="humble"
 export ROS_DOMAIN_ID="1"
+export ROS_LICENSE="© 2024 Skana Robotics Ltd. All rights reserved.
+"
 
-# Set project directory environment variable
-export PROJECT_HOST_DIR="$PROJECT_HOST_DIR"
 
-# Get current user ID and group ID and force set them
-export PROJECT_UID=$(id -u)
-export PROJECT_GID=$(id -g)
+### --- HOST CONFIGURATION --- ###
+export VERA_HOST_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export PATH="$VERA_HOST_SCRIPT_DIR:$PATH"
+export VERA_HOST_DIR="$(dirname "$VERA_HOST_SCRIPT_DIR")"
+export VERA_PROJECT_NAME="$(basename "$VERA_HOST_DIR")"
+alias ccd="cd $VERA_HOST_DIR"
 
-# Add the scripts directory to the PATH forcefully
-export PATH="$SCRIPT_DIR:$PATH"
+### --- DOCKER CONFIGURATION --- ###
+export VERA_DOCKER_USER="${VERA_PROJECT_NAME}user"
+export VERA_DOCKER_UID=$(id -u)
+export VERA_DOCKER_GID=$(id -g)
+export VERA_DOCKER_DIR="/home/$VERA_DOCKER_USER/$VERA_PROJECT_NAME"
 
-# Set the target ROS workspace in docker
-export TARGET_ROS_WS="/home/$PROJECT_USER/$PROJECT_NAME"
+### --- ROBOT CONFIGURATION --- ###
+export VERA_ROBOT_IP=10.42.0.2
+export VERA_ROBOT_USER=forecr
+### --- FINAL PROMPT / CONFIRMATION --- ###
+echo -e "\n=========================================================================="
+echo -e "\e[1mVERA®\e[0m Versitile Engine for Robotic Architecture  on \e[32m${VERA_ROS_DIST}\e[0m is ready to go!"
+echo -e "Host dir \e[32m$VERA_HOST_DIR/ ($(git branch --show-current))\e[0m"
+echo -e "Robot: \e[32m$VERA_ROBOT_USER@$VERA_ROBOT_IP\e[0m"
+echo -e "=========================================================================="
+echo -e "Next steps: 📦 build_docker.bash | 🚀 run_dev.bash | 🖥️ join_dev.bash\n"
 
-# Set the robot IP and user
-export ROBOT_IP=10.42.0.2
-export ROBOT_USER=forecr
-
-# Print configuration details
-echo "================= ROS Docker Setup ================="
-echo "Robot IP            : $ROBOT_IP"
-echo "Robot User          : $ROBOT_USER"
-echo "Project Name        : $PROJECT_NAME"
-echo "Project User        : $PROJECT_USER (UID: $PROJECT_UID, GID: $PROJECT_GID)"
-echo "Project Host Dir    : $PROJECT_HOST_DIR"
-echo "Target ROS Workspace: $TARGET_ROS_WS"
-echo "ROS Distribution    : $ROS_DIST"
-echo "ROS Domain ID       : $ROS_DOMAIN_ID"
-echo "Scripts in PATH     : $SCRIPT_DIR"
-echo "===================================================="
