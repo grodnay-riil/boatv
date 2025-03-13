@@ -1,7 +1,7 @@
 # Use VERA_ROS_DIST to set the base image; dummy default requires override from Compose.
 ARG VERA_ROS_DIST=dummy
 # FROM dockwater:${VERA_ROS_DIST}
-FROM osrf/ros:${VERA_ROS_DIST}-desktop
+FROM ros:${VERA_ROS_DIST}
 # Set up environment variables
 ARG VERA_ROS_DIST
 ARG VERA_PROJECT_NAME
@@ -18,7 +18,22 @@ ENV VERA_ROS_DIST=${VERA_ROS_DIST}
 ENV ROS_WS=${VERA_DOCKER_DIR}
 ENV DEBIAN_FRONTEND=noninteractive 
 
-ARG APT_PROXY=http://172.17.0.1:3142 #This is typically the IP of the host machine during build
+# Typical IP address for Docker host and port for apt-cacher-ng
+ARG APT_PROXY_HOST=172.17.0.1
+ARG APT_PROXY_PORT=3142
+# Set up the proxy for apt-get
+RUN /bin/bash -c ' \
+    if exec 3<>/dev/tcp/${APT_PROXY_HOST}/${APT_PROXY_PORT}; then \
+      echo -e "\033[32m Using apt-cacher-ng proxy at http://${APT_PROXY_HOST}:${APT_PROXY_PORT}\033[0m" >&2; \
+      echo "Acquire::http::Proxy \"http://${APT_PROXY_HOST}:${APT_PROXY_PORT}\";" > /etc/apt/apt.conf.d/01proxy; \
+    else \
+      echo -e "\033[33m apt-cacher-ng unavailable at http://${APT_PROXY_HOST}:${APT_PROXY_PORT}, using direct internet.\033[0m" >&2; \
+    fi'
+
+# Install some useful tools
+RUN apt-get update && apt-get install -y iperf3 net-tools iputils-ping dnsutils iproute2 nload rsync\    
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean -qq
 # Attempt to use apt-cacher-ng; if unavailable, continue without proxy.
 RUN if curl -fsSL --connect-timeout 2 "${APT_PROXY}/acng-report.html" >/dev/null; then \
       echo -e "\033[32m Using apt-cacher-ng proxy at ${APT_PROXY}\033[0m"  >&2; \
@@ -27,7 +42,7 @@ RUN if curl -fsSL --connect-timeout 2 "${APT_PROXY}/acng-report.html" >/dev/null
       echo "\033[33m apt-cacher-ng unavailable at ${APT_PROXY}, using direct internet.\033[0m"  >&2; \
     fi
 # Install some useful tools
-RUN apt-get update && apt-get install -y iperf3 net-tools iputils-ping dnsutils iproute2 nload \    
+RUN apt-get update && apt-get install -y iperf3 net-tools iputils-ping dnsutils iproute2 nload rsync\    
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean -qq
 
@@ -61,13 +76,13 @@ WORKDIR ${VERA_DOCKER_DIR}
 # Install dependencies and build workspace if src exists
 # (We do not clean after apt-get update to keep the cache)
 RUN rosdep update --rosdistro=${VERA_ROS_DIST} && sudo apt-get update && rosdep install --from-paths src --ignore-src -r -y
-RUN /bin/bash -c "source /opt/ros/${VERA_ROS_DIST}/setup.bash && colcon build --base-paths src --symlink-install"; 
+#RUN /bin/bash -c "source /opt/ros/${VERA_ROS_DIST}/setup.bash && colcon build --base-paths src --symlink-install"; 
 
 # Source workspace by default
 RUN echo "source /opt/ros/${VERA_ROS_DIST}/setup.bash" >> /home/$VERA_DOCKER_USER/.bashrc && \
     echo 'if [ -f /home/$VERA_DOCKER_USER/$VERA_PROJECT_NAME/install/setup.bash ]; then source /home/$VERA_DOCKER_USER/$VERA_PROJECT_NAME/install/setup.bash; else echo "⚠️ setup.bash not found at ~/install. Did you build the workspace? (colcon build --symlink-install)"; fi' >> /home/$VERA_DOCKER_USER/.bashrc && \
     echo "alias ccd='cd $VERA_DOCKER_DIR'" >> ~/.bashrc && \
     echo "export PROMPT_COMMAND='history -a' && export HISTFILE=/home/$VERA_DOCKER_USER/$VERA_PROJECT_NAME/.bash_history" && \
-    echo "source $VERA_DOCKER_DIR/scripts/setup.bash >> /home/$VERA_DOCKER_USER/.bashrc"
+    echo "source $VERA_DOCKER_DIR/scripts/setup.bash" >> /home/$VERA_DOCKER_USER/.bashrc
 # Default command
 CMD ["bash"]

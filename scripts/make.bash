@@ -1,10 +1,17 @@
-#!/bin/bash
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    echo -e "\033[31mThis script must be sourced! (alias 'smake')\033[0m"
+    exit 1
+fi
+if ! ([ -f /.dockerenv ]); then
+    echo -e "\033[31mError: This script must be run inside a Docker container. Exiting.\033[0m"
+    return 1
+fi
 
 # Ensure the script is run inside the ROS 2 workspace
 if [ -z "$VERA_PROJECT_NAME" ] || [ -z "$VERA_DOCKER_DIR" ]; then
     echo "❌ ERROR: Environment variables not set!"
     echo "➡️  Run 'source setup.bash' first."
-    exit 1
+    return 1
 fi
 
 # Navigate to workspace
@@ -16,12 +23,6 @@ if [[ "$1" == "--src-only" ]]; then
     BUILD_SRC_ONLY=true
 fi
 
-# Clean previous build artifacts
-echo "🧹 Cleaning old build files..."
-rm -rf build/ install/ log/
-
-# Source ROS setup file
-echo "🔄 Sourcing ROS environment..."
 source /opt/ros/$VERA_ROS_DIST/setup.bash
 
 # Run colcon build
@@ -38,12 +39,10 @@ if [ $? -eq 0 ]; then
     echo "✅ Colcon build completed successfully!"
 else
     echo "❌ Colcon build failed!"
-    exit 1
+    return 1
 fi
 
 # Source workspace setup file
 echo "🔗 Sourcing new workspace setup..."
 source "$VERA_DOCKER_DIR/install/setup.bash"
-
-# Confirmation message
-echo "🎯 Colcon build is complete. You are now ready to run your ROS 2 packages!"
+echo "🎯 Colcon build is complete." 

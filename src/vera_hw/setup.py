@@ -2,7 +2,7 @@ import os
 from glob import glob
 from setuptools import setup
 
-package_name = 'boatv_devices'
+package_name = 'vera_hw'
 
 setup(
     data_files=[

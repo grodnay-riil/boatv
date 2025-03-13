@@ -5,7 +5,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 	config = os.path.join(
-		get_package_share_directory('boatv_devices'),
+		get_package_share_directory('vera_hw'),
 		'config',
 		'ellipse_D.yaml'
 	)

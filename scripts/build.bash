@@ -27,6 +27,6 @@ cd "$VERA_HOST_DIR"
 
 export COMPOSE_BAKE=true
 
-docker compose build 
+docker compose --progress=plain build $@
 
 echo "✅ Docker containers built successfully!"

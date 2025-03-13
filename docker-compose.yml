@@ -1,13 +1,13 @@
 name: ${VERA_PROJECT_NAME}
 services:
-  dockwater:
-    build:
-      dockerfile: Dockerfile.dockwater_${VERA_ROS_DIST}
-    image: dockwater:${VERA_ROS_DIST}-latest
+  # dockwater:
+  #   build:
+  #     dockerfile: Dockerfile.dockwater_${VERA_ROS_DIST}
+  #   image: dockwater:${VERA_ROS_DIST}-latest
 
   dev:
-    depends_on:
-      - dockwater
+    # depends_on:
+      # - dockwater
     build:
       context: .
       args:
@@ -23,19 +23,19 @@ services:
     tty: true
     environment:
       - VERA_PROJECT_NAME=${VERA_PROJECT_NAME}
+      - VERA_DOCKER_DIR=${VERA_DOCKER_DIR}
       - VERA_ROS_DIST=${VERA_ROS_DIST}
       - VERA_DOCKER_USER=${VERA_DOCKER_USER}
       - VERA_ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
       #cyclone dds
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-      - CYCLONEDDS_URI=file:///home/${VERA_DOCKER_USER}/cyclonedds.xml
+      - CYCLONEDDS_URI=file://${VERA_DOCKER_DIR}/cyclonedds.xml
        #Nvidia display magic
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
       - QT_QPA_PLATFORMTHEME=qt5ct
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
-      - VERA_DOCKER_DIR=${VERA_DOCKER_DIR}
       - LIBGL_ALWAYS_INDIRECT=1
       - MESA_GL_VERSION_OVERRIDE=4.6
     volumes:
@@ -51,9 +51,11 @@ services:
       - /dev/input:/dev/input
       - /dev/serial:/dev/serial
       - /dev/dri:/dev/dri  
+      - /dev/ttyUSB0:/dev/ttyUSB0
     network_mode: host
     privileged: true
     ipc: host #for optional dds intercontainer communication
+    runtime: nvidia
     gpus: all #some more Nvidia magic
     deploy:
       resources:

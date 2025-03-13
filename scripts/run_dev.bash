@@ -13,7 +13,7 @@ echo "Running ros_build container interactively for project at ${VERA_HOST_DIR}.
 cd "$VERA_HOST_DIR"
 
 # Start the container
-if docker compose up -d "dev"; then
+if docker compose up $@ -d "dev" --remove-orphans; then
     echo -e  "-----------------------------------------"
     echo -e  "Container '\e[32m${VERA_PROJECT_NAME}_dev'\e[0m started successfully!"
     echo -e  "Next steps:"
