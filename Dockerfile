@@ -67,7 +67,7 @@ RUN /bin/bash -c "source /opt/ros/${VERA_ROS_DIST}/setup.bash && colcon build --
 RUN echo "source /opt/ros/${VERA_ROS_DIST}/setup.bash" >> /home/$VERA_DOCKER_USER/.bashrc && \
     echo 'if [ -f /home/$VERA_DOCKER_USER/$VERA_PROJECT_NAME/install/setup.bash ]; then source /home/$VERA_DOCKER_USER/$VERA_PROJECT_NAME/install/setup.bash; else echo "⚠️ setup.bash not found at ~/install. Did you build the workspace? (colcon build --symlink-install)"; fi' >> /home/$VERA_DOCKER_USER/.bashrc && \
     echo "alias ccd='cd $VERA_DOCKER_DIR'" >> ~/.bashrc && \
-    echo "export PROMPT_COMMAND='history -a' && export HISTFILE=/home/$VERA_DOCKER_USER/$VERA_PROJECT_NAME/.bash_history" 
-
+    echo "export PROMPT_COMMAND='history -a' && export HISTFILE=/home/$VERA_DOCKER_USER/$VERA_PROJECT_NAME/.bash_history" && \
+    echo "source $VERA_DOCKER_DIR/scripts/setup.bash >> /home/$VERA_DOCKER_USER/.bashrc"
 # Default command
 CMD ["bash"]

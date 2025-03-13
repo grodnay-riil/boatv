@@ -30,5 +30,5 @@ echo -e "\e[1mVERA®\e[0m Versitile Engine for Robotic Architecture  on \e[32m${
 echo -e "Host dir \e[32m$VERA_HOST_DIR/ ($(git branch --show-current))\e[0m"
 echo -e "Robot: \e[32m$VERA_ROBOT_USER@$VERA_ROBOT_IP\e[0m"
 echo -e "=========================================================================="
-echo -e "Next steps: 📦 build_docker.bash | 🚀 run_dev.bash | 🖥️ join_dev.bash\n"
+echo -e "Next steps: 📦 build_docker.bash | 🚀 run_dev.bash | 🖥️ join_dev.bash | 🔨 make.bash \n"
 
