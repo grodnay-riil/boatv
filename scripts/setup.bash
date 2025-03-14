@@ -28,6 +28,7 @@ export VERA_ROBOT_DIR="/home/$VERA_ROBOT_USER/$VERA_PROJECT_NAME"
 alias ssrobot="ssh $VERA_ROBOT_USER@$VERA_ROBOT_IP"
 alias ss=source "$VERA_DOCKER_DIR/install/setup.bash"
 alias smake="source $VERA_HOST_SCRIPT_DIR/make.bash"
+alias autodeploy="watch -c -n 5 deploy.bash"
 #!/bin/bash
 
 ### --- FINAL PROMPT / CONFIRMATION --- ###

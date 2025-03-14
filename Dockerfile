@@ -31,7 +31,7 @@ RUN /bin/bash -c ' \
     fi'
 
 # Install some useful tools
-RUN apt-get update && apt-get install -y iperf3 net-tools iputils-ping dnsutils iproute2 nload rsync\    
+RUN apt-get update && apt-get install -y iperf3 net-tools iputils-ping dnsutils iproute2 nload rsync dbus-x11\    
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean -qq
 # Attempt to use apt-cacher-ng; if unavailable, continue without proxy.
@@ -42,7 +42,7 @@ RUN if curl -fsSL --connect-timeout 2 "${APT_PROXY}/acng-report.html" >/dev/null
       echo "\033[33m apt-cacher-ng unavailable at ${APT_PROXY}, using direct internet.\033[0m"  >&2; \
     fi
 # Install some useful tools
-RUN apt-get update && apt-get install -y iperf3 net-tools iputils-ping dnsutils iproute2 nload rsync\    
+RUN apt-get update && apt-get install -y iperf3 net-tools iputils-ping dnsutils iproute2 nload rsync inotify-tools libnotify-bin ssh \    
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean -qq
 
