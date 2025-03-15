@@ -1,7 +1,3 @@
-if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-    echo -e "\033[31mThis script must be sourced! (alias 'smake')\033[0m"
-    exit 1
-fi
 if ! ([ -f /.dockerenv ]); then
     echo -e "\033[31mError: This script must be run inside a Docker container. Exiting.\033[0m"
     return 1
@@ -43,6 +39,5 @@ else
 fi
 
 # Source workspace setup file
-echo "🔗 Sourcing new workspace setup..."
-source "$VERA_DOCKER_DIR/install/setup.bash"
 echo "🎯 Colcon build is complete." 
+echo "🔗 Now source new workspace setup (or use "smake")..."

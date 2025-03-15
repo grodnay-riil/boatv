@@ -31,7 +31,8 @@ RUN /bin/bash -c ' \
     fi'
 # Install some useful tools
 RUN apt-get update && apt-get install -y iperf3 net-tools iputils-ping dnsutils iproute2 nload rsync inotify-tools libnotify-bin ssh \    
-    python3-colcon-clean tmux   \
+    python3-colcon-clean tmux  libogre-1.12-dev \ 
+    && ldconfig \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean -qq
 
