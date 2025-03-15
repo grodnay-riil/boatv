@@ -6,7 +6,7 @@
   <license>Proprietary</license>
 
   <depend>rmw_cyclonedds_cpp</depend>
-  <depend>zenoh_bridge_dds</depend>
+  <!-- <depend>zenoh_bridge_dds</depend> -->
   <depend>rqt_common_plugins</depend>
 
   <export>

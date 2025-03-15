@@ -29,20 +29,9 @@ RUN /bin/bash -c ' \
     else \
       echo -e "\033[33m apt-cacher-ng unavailable at http://${APT_PROXY_HOST}:${APT_PROXY_PORT}, using direct internet.\033[0m" >&2; \
     fi'
-
-# Install some useful tools
-RUN apt-get update && apt-get install -y iperf3 net-tools iputils-ping dnsutils iproute2 nload rsync dbus-x11\    
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean -qq
-# Attempt to use apt-cacher-ng; if unavailable, continue without proxy.
-RUN if curl -fsSL --connect-timeout 2 "${APT_PROXY}/acng-report.html" >/dev/null; then \
-      echo -e "\033[32m Using apt-cacher-ng proxy at ${APT_PROXY}\033[0m"  >&2; \
-      echo "Acquire::http::Proxy \"${APT_PROXY}\";" > /etc/apt/apt.conf.d/01proxy; \
-    else \
-      echo "\033[33m apt-cacher-ng unavailable at ${APT_PROXY}, using direct internet.\033[0m"  >&2; \
-    fi
 # Install some useful tools
 RUN apt-get update && apt-get install -y iperf3 net-tools iputils-ping dnsutils iproute2 nload rsync inotify-tools libnotify-bin ssh \    
+    python3-colcon-clean tmux   \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean -qq
 
@@ -54,7 +43,7 @@ RUN groupadd -g $VERA_DOCKER_GID $VERA_DOCKER_USER && \
 # Enable bash completion and add a colorful prompt
 RUN apt-get update && apt-get install -y bash-completion && \
     echo "source /usr/share/bash-completion/bash_completion" >> /home/$VERA_DOCKER_USER/.bashrc && \
-    echo 'PS1="\[\e[32m\]\u@\h:\[\e[34m\]\w\[\e[m\]\[\e[33m\]\$(__git_ps1)\[\e[m\]$ "' >> /home/$VERA_DOCKER_USER/.bashrc && \
+    echo 'PS1="💫\[\e[32m\]\u@\h:\[\e[34m\]\w\[\e[m\]\[\e[33m\]\$(__git_ps1)\[\e[m\]$ "' >> /home/$VERA_DOCKER_USER/.bashrc && \
     echo "#lines removed for autocomplete" > /etc/apt/apt.conf.d/docker-clean \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean -qq
@@ -70,6 +59,8 @@ RUN mkdir -p /home/$VERA_DOCKER_USER/$VERA_PROJECT_NAME/src && \
     mkdir -p /home/$VERA_DOCKER_USER/.ssh && \
     chown -R $VERA_DOCKER_UID:$VERA_DOCKER_GID  /home/$VERA_DOCKER_USER/.gz /home/$VERA_DOCKER_USER/.vscode-server /home/$VERA_DOCKER_USER/.ssh
 
+RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" |  tee -a /etc/apt/sources.list > /dev/null && \
+    apt update && apt install zenoh-bridge-ros2dds -y
 #Were done with root, switch to user
 USER $VERA_DOCKER_USER
 WORKDIR ${VERA_DOCKER_DIR}

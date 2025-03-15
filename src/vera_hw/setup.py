@@ -5,6 +5,8 @@ from setuptools import setup
 package_name = 'vera_hw'
 
 setup(
+    name=package_name,
+    license='Skana Robotics LTD',
     data_files=[
         (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*'))),
         (os.path.join('share', package_name, 'config'), glob(os.path.join('config', '*'))),

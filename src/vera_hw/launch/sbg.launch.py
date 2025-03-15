@@ -7,13 +7,13 @@ def generate_launch_description():
 	config = os.path.join(
 		get_package_share_directory('vera_hw'),
 		'config',
-		'ellipse_D.yaml'
+		'sbg_device_uart_default.yaml'
 	)
 
 	return LaunchDescription([
 		Node(
 			package='sbg_driver',
-			name='ellipseD',
+		#	name='sbg_device_1',
 			executable = 'sbg_device',
 			output = 'screen',
 			parameters = [config]

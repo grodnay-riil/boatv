@@ -1,25 +1,16 @@
-from setuptools import find_packages, setup
+import os
+from glob import glob
+from setuptools import setup
 
 package_name = 'vera_core'
 
 setup(
     name=package_name,
-    version='0.0.0',
-    packages=find_packages(exclude=['test']),
+    license='Copyright (c) 2024 Skana Robotics LTD',
     data_files=[
-        ('share/ament_index/resource_index/packages',
-            ['resource/' + package_name]),
-        ('share/' + package_name, ['package.xml']),
-    ],
-    install_requires=['setuptools'],
-    zip_safe=True,
-    maintainer='verauser',
-    maintainer_email='grodnay@riil.tech',
-    description='TODO: Package description',
-    license='TODO: License declaration',
-    tests_require=['pytest'],
-    entry_points={
-        'console_scripts': [
-        ],
-    },
+        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*'))),
+        (os.path.join('share', package_name, 'config'), glob(os.path.join('config', '*'))),
+         ('share/' + package_name, ['package.xml']),  # Ensure package.xml is installed
+        ('share/ament_index/resource_index/packages', ['resource/' + package_name]),  # Install marker
+    ]
 )

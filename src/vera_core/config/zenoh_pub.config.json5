@@ -3,6 +3,7 @@
 //// The "ros2" JSON5 object below can be used as such in the "plugins" part of a config file for the zenoh router (zenohd).
 ////
 {
+  
   plugins: {
     ////
     //// ROS2 related configuration
@@ -28,13 +29,13 @@
       ////
       //// domain: The DDS Domain ID. By default set to 0, or to "$ROS_DOMAIN_ID" is this environment variable is defined.
       ////
-      // domain: 0,
+      //domain: 1,
 
       ////
       //// ros_localhost_only: If set to true, the DDS discovery and traffic will occur only on the localhost interface (127.0.0.1).
       ////                     By default set to false, unless the "ROS_LOCALHOST_ONLY=1" environment variable is defined.
       ////
-      ros_localhost_only: true,
+      //ros_localhost_only: true,
 
       ////
       //// ros_automatic_discovery_range: controls how far ROS nodes will try to discover each other.
@@ -47,7 +48,7 @@
       ////                                Note that this is only available with ROS 2 Iron and later version
       ////                                For more information: https://docs.ros.org/en/rolling/Tutorials/Advanced/Improved-Dynamic-Discovery.html
       ////
-      ros_automatic_discovery_range: "LOCALHOST",
+      // ros_automatic_discovery_range: "LOCALHOST",
 
       ////
       //// ros_static_peers: is a semicolon (;) separated list of addresses that ROS should try to discover nodes on.
@@ -75,14 +76,9 @@
       ////               Use 'deny' to allow all except the specified interfaces. If an interface type is set to an empty list
       ////               or is not specified at all, it means that ALL such interface are allowed.
       allow: {
-        publishers: ["/large_topic"],
-      //   subscribers: [".*/cmd_vel"],
-      //   service_servers: [".*/.*_parameters"],
-      //   service_clients: [],
-      //   action_servers: [".*/rotate_absolute"],
-      //   action_clients: [],
+         publishers: ["/sbg/ekf_quat"]
       },
-      // ]deny: {
+      // // ]deny: {
       //   publishers: ["/rosout", "/parameter_events"],
       //     subscribers: ["/large_topic"],
       //   service_servers: [".*/set_parameters"],
@@ -97,7 +93,7 @@
       ////                      - "regex" is a regular expression matching a Publisher interface name
       ////                      - "float" is the maximum frequency in Hertz;
       ////                        if publication rate is higher, downsampling will occur when routing.
-      pub_max_frequencies: ["/large_topic=1"],
+      pub_max_frequencies: ["/sbg/ekf_quat=10"],
 
       ////
       //// pub_priorities: Specify a list of priorities of publications routing over zenoh for a set of Publishers.
@@ -111,7 +107,7 @@
       ////                   The express policy makes Zenoh to to send the message immediatly, not waiting for possible further messages
       ////                   to create a bigger batch of messages. This usually has a positive impact on latency for the topic
       ////                   but a negative impact on the general throughput, as more overhead is used for those topics.
-      pub_priorities: ["/large_topic=1:express"],
+      // pub_priorities: ["/sbg/ekf_quat=1:express"],
 
       ////
       //// reliable_routes_blocking: When true, the publications from a RELIABLE DDS Writer will be
@@ -209,12 +205,12 @@
   ////
   //// Which endpoints to connect to. E.g. tcp/localhost:7447.
   //// By configuring the endpoints, it is possible to tell zenoh which remote router or other zenoh-bridge-ros2dds to connect to at startup.
-  ////
-  connect: {
-    endpoints: [
-      "udp/172.18.0.3:7447"
-    ]
-  },
+  // ////
+  // connect: {
+  //   endpoints: [
+  //     "udp/10.42.10.1:7448"
+  //   ]
+  // },
 
   ////
   //// Which endpoints to listen on.
@@ -223,45 +219,45 @@
   //// In 'router' mode (default) the zenoh-bridge-ros2dds is listening by default on `tcp/0.0.0.0:7447` (`0.0.0.0` meaning all the available network interfaces)
   ////
   // listen: {
-  //  endpoints: [
-  //    "udp/0.0.0.0:7447"
-  //  ]
+  //   endpoints: [
+  //     "udp/10.42.0.2:7447"
+  //   ]
   // },
 
   ////
   //// Configure the scouting mechanisms and their behaviours
   ////
-  //scouting: {
-  //  /// The UDP multicast scouting configuration.
-  //  multicast: {
-  //    /// Whether multicast scouting is enabled or not
-  //    enabled: true,
-  //    /// The socket which should be used for multicast scouting
-  //    address: "224.0.0.224:7446",
-  //    /// The network interface which should be used for multicast scouting
-  //    interface: "auto", // If not set or set to "auto" the interface if picked automatically
-  //    /// Which type of Zenoh instances to automatically establish sessions with upon discovery on UDP multicast.
-  //    /// Accepts a single value or different values for router, peer and client.
-  //    /// Each value is an array containing values "peer", "router" and "client".
-  //    autoconnect: { router: [], peer: ["router","peer"] },
-  //    /// Whether or not to listen for scout messages on UDP multicast and reply to them.
-  //    listen: true,
-  //  },
-  //  /// The gossip scouting configuration.
-  //  gossip: {
-  //    /// Whether gossip scouting is enabled or not
-  //    enabled: true,
-  //    /// When true, gossip scouting information is propagated multiple hops to all nodes in the local network.
-  //    /// When false, gossip scouting information is only propagated to the next hop.
-  //    /// Activating multihop gossip implies more scouting traffic and a lower scalability.
-  //    /// It mostly makes sense when using "linkstate" routing mode where all nodes in the subsystem don't have
-  //    /// direct connectivity with each other.
-  //    multihop: false,
-  //    /// Which type of Zenoh instances to automatically establish sessions with upon discovery on gossip.
-  //    /// Accepts a single value or different values for router, peer and client.
-  //    /// Each value is an array containing values "peer", "router" and "client".
-  //    autoconnect: { router: [], peer: ["router","peer"] },
-  //  },
-  //},
+  scouting: {
+   /// The UDP multicast scouting configuration.
+   multicast: {
+     /// Whether multicast scouting is enabled or not
+      enabled: true,
+     /// The socket which should be used for multicast scouting
+     address: "224.0.0.224:7446",
+     /// The network interface which should be used for multicast scouting
+     interface: "auto", // If not set or set to "auto" the interface if picked automatically
+     /// Which type of Zenoh instances to automatically establish sessions with upon discovery on UDP multicast.
+     /// Accepts a single value or different values for router, peer and client.
+     /// Each value is an array containing values "peer", "router" and "client".
+     autoconnect: { router: [], peer: ["router","peer"] },
+     /// Whether or not to listen for scout messages on UDP multicast and reply to them.
+     listen: true,
+   },
+   /// The gossip scouting configuration.
+   gossip: {
+     /// Whether gossip scouting is enabled or not
+     enabled: false,
+     /// When true, gossip scouting information is propagated multiple hops to all nodes in the local network.
+     /// When false, gossip scouting information is only propagated to the next hop.
+     /// Activating multihop gossip implies more scouting traffic and a lower scalability.
+     /// It mostly makes sense when using "linkstate" routing mode where all nodes in the subsystem don't have
+     /// direct connectivity with each other.
+     multihop: false,
+     /// Which type of Zenoh instances to automatically establish sessions with upon discovery on gossip.
+     /// Accepts a single value or different values for router, peer and client.
+     /// Each value is an array containing values "peer", "router" and "client".
+     autoconnect: { router: [], peer: ["router","peer"] },
+   },
+  },
 
 }

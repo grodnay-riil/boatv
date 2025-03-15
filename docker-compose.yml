@@ -27,6 +27,7 @@ services:
       - VERA_ROS_DIST=${VERA_ROS_DIST}
       - VERA_DOCKER_USER=${VERA_DOCKER_USER}
       - VERA_ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
+      #- ROS_LOCALHOST_ONLY=1
       #cyclone dds
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       - CYCLONEDDS_URI=file://${VERA_DOCKER_DIR}/cyclonedds.xml
@@ -51,7 +52,7 @@ services:
       - /dev/input:/dev/input
       - /dev/serial:/dev/serial
       - /dev/dri:/dev/dri  
-      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev:/dev
     network_mode: host
     privileged: true
     ipc: host #for optional dds intercontainer communication
