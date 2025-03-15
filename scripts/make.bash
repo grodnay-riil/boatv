@@ -1,13 +1,13 @@
 if ! ([ -f /.dockerenv ]); then
     echo -e "\033[31mError: This script must be run inside a Docker container. Exiting.\033[0m"
-    return 1
+    exit 1
 fi
 
 # Ensure the script is run inside the ROS 2 workspace
 if [ -z "$VERA_PROJECT_NAME" ] || [ -z "$VERA_DOCKER_DIR" ]; then
     echo "❌ ERROR: Environment variables not set!"
     echo "➡️  Run 'source setup.bash' first."
-    return 1
+    exit 1
 fi
 
 # Navigate to workspace
@@ -35,7 +35,7 @@ if [ $? -eq 0 ]; then
     echo "✅ Colcon build completed successfully!"
 else
     echo "❌ Colcon build failed!"
-    return 1
+    exit 1
 fi
 
 # Source workspace setup file

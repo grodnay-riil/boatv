@@ -12,6 +12,8 @@ This repository contains the proprietary ROS 2-based robotics environment, **VER
 - `third_party/`: External ROS packages and dependencies.
 - `scripts/`: Helper scripts (building, running, deploying).
 - `cyclonedds.xml`: DDS configuration file.
+- `Dockerfile` : Docker images building script
+- `dockercompose.yaml` : How to build and run services based on docker images 
 
 ## 🚀 Getting Started
 
@@ -23,8 +25,7 @@ git clone https://github.com/RIILTECH/vera.git --recurse-submodules
 
 ### 1. Environment Setup
 I assume you already have ```docker``` and ```vscode``` installed on host.
-Optional for faster docker builds.
-
+Optional for faster docker builds (if you remove you'll have to build gain)
 ```bash
 sudo apt-get install apt-cacher-ng -y
 ```
@@ -58,15 +59,18 @@ Build your workspace using colcon:
 
 ```bash
 colcon build --symlink-install
+source install/setup.bash
 ```
+or use the alias ```sbuild```.
 
-Optionally, deploy the code to the robot:
+You can now launch nodes and packages within the development container on the host.
+
+For the robot, deploy the code to the robot (or use alias ```autodeploy``` to deploy continuously):
 
 ```bash
 deploy.bash
 ```
-
-You can now launch nodes and packages within the development container.
+Ssh to the robot alias ```ssrobot``` and repeat the build over there:
 
 ### 3. Launching the complete system
 

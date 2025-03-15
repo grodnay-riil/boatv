@@ -8,7 +8,9 @@
   <license>TODO: License declaration</license>
 
   <depend>rclpy</depend>
-  <depend>rviz</depend>
+  <depend>rviz2</depend>
+  <depend>rqt_common_plugins</depend>
+  <depend>rqt_tf_tree</depend>
 
   <!-- <depend>zenoh_bridge_dds</depend> --> <!-- We are using a stand alone verion -->
 

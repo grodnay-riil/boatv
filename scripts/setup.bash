@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### --- GENERAL CONFIGURATION --- ###
-export VERA_MODEL=${VERA_MODEL:-generic}
+export VERA_MODEL=${VERA_MODEL:-sbg}
 export VERA_ROS_DIST="humble"
 export ROS_DOMAIN_ID="1"
 export ROS_LICENSE="© 2024 Skana Robotics Ltd. All rights reserved."
@@ -13,7 +13,7 @@ export VERA_HOST_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export PATH="$VERA_HOST_SCRIPT_DIR:$PATH"
 export VERA_HOST_DIR="$(dirname "$VERA_HOST_SCRIPT_DIR")"
 export VERA_PROJECT_NAME="$(basename "$VERA_HOST_DIR")"
-alias ccd="cd $VERA_HOST_DIR"
+
 
 ### --- DOCKER CONFIGURATION --- ###
 export VERA_DOCKER_USER="${VERA_PROJECT_NAME}user"
@@ -25,8 +25,11 @@ export VERA_DOCKER_DIR="/home/$VERA_DOCKER_USER/$VERA_PROJECT_NAME"
 export VERA_ROBOT_IP=10.42.2.2
 export VERA_ROBOT_USER=forecr
 export VERA_ROBOT_DIR="/home/$VERA_ROBOT_USER/$VERA_PROJECT_NAME"
+
+### --- ALIASES --- ###
+alias ccd="cd $VERA_HOST_DIR"
 alias ssrobot="ssh $VERA_ROBOT_USER@$VERA_ROBOT_IP"
-alias ss=source "$VERA_DOCKER_DIR/install/setup.bash"
+alias ss="source $VERA_DOCKER_DIR/install/setup.bash"
 alias smake="make.bash && echo 🔗 Sourcing for you... && source $VERA_DOCKER_DIR/install/setup.bash" 
 alias autodeploy="watch -c -n 2 deploy.bash"
 #!/bin/bash
