@@ -65,3 +65,29 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
+  ui:
+    extends:
+      service: dev
+    command: /bin/bash -c " \
+            source ${VERA_DOCKER_DIR}/scripts/setup.bash && \
+            source ${VERA_DOCKER_DIR}/install/setup.bash && \
+            ros2 launch vera_ui ${VERA_MODEL}.launch.py"
+    container_name: ${VERA_PROJECT_NAME}_ui
+  hw:
+    extends:
+      service: dev
+    command: /bin/bash -c " \
+            source ${VERA_DOCKER_DIR}/scripts/setup.bash && \
+            source ${VERA_DOCKER_DIR}/install/setup.bash && \
+            ros2 launch vera_hw ${VERA_MODEL}.launch.py"
+    container_name: ${VERA_PROJECT_NAME}_hw
+  core:
+    extends:
+      service: dev
+    command: /bin/bash -c " \
+            source ${VERA_DOCKER_DIR}/scripts/setup.bash && \
+            source ${VERA_DOCKER_DIR}/install/setup.bash && \
+            ros2 launch vera_core ${VERA_MODEL}.launch.py"
+    container_name: ${VERA_PROJECT_NAME}_core
+
+  
