@@ -1,0 +1,16 @@
+<package format="3">
+  <name>vera</name>
+  <version>0.0.1</version>
+  <description>Meta package for VERA dependencies</description>
+  <maintainer email="grodnay@riil.tech">Your Name</maintainer>
+  <license>Proprietary</license>
+
+  <depend>rmw_cyclonedds_cpp</depend>
+  <!-- <depend>zenoh_bridge_dds</depend> -->
+  <depend>rqt_common_plugins</depend>
+  <depend>rviz2</depend>
+  
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

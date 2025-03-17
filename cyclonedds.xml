@@ -3,7 +3,7 @@
     <General>
       <Interfaces>
         <!-- Use only internal interfaces and loopback for DDS communication -->
-        <NetworkInterface address="127.0.0.1" multicast="true"/>
+        <NetworkInterface address="127.0.0.1" multicast="false"/>
       </Interfaces>
       <DontRoute>true</DontRoute>
     </General>

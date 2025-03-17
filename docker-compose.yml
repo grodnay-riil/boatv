@@ -1,57 +1,63 @@
-name: ${PROJECT_NAME}
+name: ${VERA_PROJECT_NAME}
 services:
-  dockwater:
-    build:
-      dockerfile: Dockerfile.dockwater_${ROS_DIST}
-    image: dockwater:humble
+  # dockwater:
+  #   build:
+  #     dockerfile: Dockerfile.dockwater_${VERA_ROS_DIST}
+  #   image: dockwater:${VERA_ROS_DIST}-latest
+
   dev:
-    depends_on:
-      - dockwater
+    # depends_on:
+      # - dockwater
     build:
       context: .
       args:
-        ROS_DIST: ${ROS_DIST}  
-        PROJECT_NAME: ${PROJECT_NAME}
-        PROJECT_USER: ${PROJECT_USER}
-        PROJECT_UID: ${PROJECT_UID}
-        PROJECT_GID: ${PROJECT_GID}
-        TARGET_ROS_WS: ${TARGET_ROS_WS}
-    container_name: boatvdev
-    image: "${PROJECT_NAME}_dev"
-    stdin_open: true 
-    tty: true  
-    user: "${PROJECT_UID}:${PROJECT_GID}"
-    command: /bin/bash
+        VERA_ROS_DIST: ${VERA_ROS_DIST}
+        VERA_PROJECT_NAME: ${VERA_PROJECT_NAME}
+        VERA_DOCKER_USER: ${VERA_DOCKER_USER}
+        VERA_DOCKER_UID: ${VERA_DOCKER_UID}
+        VERA_DOCKER_GID: ${VERA_DOCKER_GID}
+        VERA_DOCKER_DIR: ${VERA_DOCKER_DIR}
+    container_name: ${VERA_PROJECT_NAME}_dev
+    image: "${VERA_PROJECT_NAME}_dev:latest"
+    stdin_open: true
+    tty: true
     environment:
+      - VERA_PROJECT_NAME=${VERA_PROJECT_NAME}
+      - VERA_DOCKER_DIR=${VERA_DOCKER_DIR}
+      - VERA_ROS_DIST=${VERA_ROS_DIST}
+      - VERA_DOCKER_USER=${VERA_DOCKER_USER}
+      - VERA_ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
+      #- ROS_LOCALHOST_ONLY=1
+      #cyclone dds
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-      - CYCLONEDDS_URI=file:///home/${PROJECT_USER}/${PROJECT_NAME}/cyclonedds.xml
-      - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
-      - PROJECT_NAME=${PROJECT_NAME}
-      - ROS_DIST=${ROS_DIST}
-      - PROJECT_USER=${PROJECT_USER}
-      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
+      - CYCLONEDDS_URI=file://${VERA_DOCKER_DIR}/cyclonedds.xml
+       #Nvidia display magic
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
       - QT_QPA_PLATFORMTHEME=qt5ct
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
-      - TARGET_ROS_WS=${TARGET_ROS_WS}
-      - LIBGL_ALWAYS_INDIRECT=1   # New: Allow indirect rendering
-      - MESA_GL_VERSION_OVERRIDE=4.6  # New: Override GL version for compatibility
+      - LIBGL_ALWAYS_INDIRECT=1
+      - MESA_GL_VERSION_OVERRIDE=4.6
     volumes:
-      - .:${TARGET_ROS_WS}
-      - .vscode:/home/${PROJECT_USER}/.vscode-server
+      #main code
+      - .:${VERA_DOCKER_DIR}
+      #development chain persistent
+      - ~/.ssh:/home/${VERA_DOCKER_USER}/.ssh #share keys with host
+      #- .vscode:/home/${VERA_DOCKER_USER}/.vscode-server #vscode cache
+      - .gz:/home/${VERA_DOCKER_USER}/.gz #gazebo worlds cache
+      #hardware access
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ~/.Xauthority:/home/${PROJECT_USER}/.Xauthority
+      - ~/.Xauthority:/home/${VERA_DOCKER_USER}/.Xauthority
       - /dev/input:/dev/input
       - /dev/serial:/dev/serial
-      - /dev/dri:/dev/dri
-      - ~/.ssh:/home/${PROJECT_USER}/.ssh
-      - .gz:/home/${PROJECT_USER}/.gz
+      - /dev/dri:/dev/dri  
+      - /dev:/dev
     network_mode: host
     privileged: true
-    ipc: host
-    gpus: all
+    ipc: host #for optional dds intercontainer communication
+    runtime: nvidia
+    gpus: all #some more Nvidia magic
     deploy:
       resources:
         reservations:
@@ -59,3 +65,29 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
+  ui:
+    extends:
+      service: dev
+    command: /bin/bash -c " \
+            source ${VERA_DOCKER_DIR}/scripts/setup.bash && \
+            source ${VERA_DOCKER_DIR}/install/setup.bash && \
+            ros2 launch vera_ui ${VERA_MODEL}.launch.py"
+    container_name: ${VERA_PROJECT_NAME}_ui
+  hw:
+    extends:
+      service: dev
+    command: /bin/bash -c " \
+            source ${VERA_DOCKER_DIR}/scripts/setup.bash && \
+            source ${VERA_DOCKER_DIR}/install/setup.bash && \
+            ros2 launch vera_hw ${VERA_MODEL}.launch.py"
+    container_name: ${VERA_PROJECT_NAME}_hw
+  core:
+    extends:
+      service: dev
+    command: /bin/bash -c " \
+            source ${VERA_DOCKER_DIR}/scripts/setup.bash && \
+            source ${VERA_DOCKER_DIR}/install/setup.bash && \
+            ros2 launch vera_core ${VERA_MODEL}.launch.py"
+    container_name: ${VERA_PROJECT_NAME}_core
+
+  
