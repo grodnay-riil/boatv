@@ -120,6 +120,9 @@ Add the following iptables rule for masquerading:
 
 ```bash
 sudo iptables -t nat -A POSTROUTING -o eno0 -j MASQUERADE
+sudo iptables -A FORWARD -i eno1 -o eno0 -j ACCEPT
+sudo iptables -A FORWARD -i eno0 -o eno1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+
 ```
 
 Save this rule permanently:
