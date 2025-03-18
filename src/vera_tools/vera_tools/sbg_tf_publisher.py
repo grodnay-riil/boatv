@@ -24,9 +24,9 @@ class TFPublisherNode(Node):
         # Use current time for the timestamp
         t.header.stamp = self.get_clock().now().to_msg()
         # Parent frame is "sbg_origin"
-        t.header.frame_id = 'sbg_origin'
+        t.header.frame_id = 'map'
         # Child frame is "sbg_rotated"
-        t.child_frame_id = 'sbg_rotated'
+        t.child_frame_id = 'base_link'
         
         # Set translation to the origin (0,0,0)
         t.transform.translation.x = 0.0
