@@ -8,7 +8,6 @@
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <build_depend>ament_python</build_depend>
 
   <depend>sbg_driver</depend>
   <depend>tf2_ros</depend>

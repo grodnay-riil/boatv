@@ -9,9 +9,9 @@
           "pretty-print": "       @                         "
         },
         "state": {
-          "repr(QByteArray.hex)": "QtCore.QByteArray(b'000000ff00000000fd000000010000000300000d2c000007c0fc0100000001fc0000000000000d2c0000042300fffffffc0200000002fb00000044007200710074005f00670072006100700068005f005f0052006f007300470072006100700068005f005f0031005f005f0052006f007300470072006100700068005500690100000022000001750000016900fffffffb0000004c007200710074005f00740066005f0074007200650065005f005f0052006f0073005400660054007200650065005f005f0031005f005f0052006f00730054006600540072006500650055006901000001a30000063f0000010700ffffff00000d2c0000000000000004000000040000000800000008fc00000001000000030000000100000036004d0069006e0069006d0069007a006500640044006f0063006b00570069006400670065007400730054006f006f006c0062006100720000000000ffffffff0000000000000000')",
+          "repr(QByteArray.hex)": "QtCore.QByteArray(b'000000ff00000000fd000000010000000300000d2c000007c0fc0100000001fc0000000000000d2c000002e000fffffffc0100000002fb0000004c007200710074005f0074006f007000690063005f005f0054006f0070006900630050006c007500670069006e005f005f0031005f005f0054006f0070006900630057006900640067006500740100000000000004f90000011800fffffffb0000006a007200710074005f0072006f0062006f0074005f007300740065006500720069006e0067005f005f0052006f0062006f0074005300740065006500720069006e0067005f005f0031005f005f0052006f0062006f0074005300740065006500720069006e006700550069010000050500000827000001bc00ffffff00000d2c0000000000000004000000040000000800000008fc00000001000000030000000100000036004d0069006e0069006d0069007a006500640044006f0063006b00570069006400670065007400730054006f006f006c0062006100720000000000ffffffff0000000000000000')",
           "type": "repr(QByteArray.hex)",
-          "pretty-print": "                   , #                                           \" u i                                              ?     ,                                                      "
+          "pretty-print": "                   ,                                                                                                                   '     ,                                                      "
         }
       },
       "groups": {
@@ -29,18 +29,18 @@
     "pluginmanager": {
       "keys": {
         "running-plugins": {
-          "repr": "{'rqt_graph/RosGraph': [1], 'rqt_tf_tree/RosTfTree': [1]}",
+          "repr": "{'rqt_robot_steering/RobotSteering': [1], 'rqt_topic/TopicPlugin': [1]}",
           "type": "repr"
         }
       },
       "groups": {
-        "plugin__rqt_graph__RosGraph__1": {
+        "plugin__rqt_robot_steering__RobotSteering__1": {
           "keys": {},
           "groups": {
-            "dock_widget__RosGraphUi": {
+            "dock_widget__RobotSteeringUi": {
               "keys": {
                 "dock_widget_title": {
-                  "repr": "'Node Graph'",
+                  "repr": "'Robot Steering'",
                   "type": "repr"
                 },
                 "dockable": {
@@ -56,64 +56,24 @@
             },
             "plugin": {
               "keys": {
-                "actionlib_check_box_state": {
-                  "repr": "True",
+                "topic": {
+                  "repr": "'/cmd_vel'",
                   "type": "repr"
                 },
-                "auto_fit_graph_check_box_state": {
-                  "repr": "True",
+                "vw_max": {
+                  "repr": "3.0",
                   "type": "repr"
                 },
-                "dead_sinks_check_box_state": {
-                  "repr": "True",
+                "vw_min": {
+                  "repr": "-3.0",
                   "type": "repr"
                 },
-                "filter_line_edit_text": {
-                  "repr": "'/'",
+                "vx_max": {
+                  "repr": "1.0",
                   "type": "repr"
                 },
-                "graph_type_combo_box_index": {
-                  "repr": "0",
-                  "type": "repr"
-                },
-                "group_image_check_box_state": {
-                  "repr": "True",
-                  "type": "repr"
-                },
-                "group_tf_check_box_state": {
-                  "repr": "False",
-                  "type": "repr"
-                },
-                "hide_dynamic_reconfigure_check_box_state": {
-                  "repr": "True",
-                  "type": "repr"
-                },
-                "hide_tf_nodes_check_box_state": {
-                  "repr": "False",
-                  "type": "repr"
-                },
-                "highlight_connections_check_box_state": {
-                  "repr": "True",
-                  "type": "repr"
-                },
-                "leaf_topics_check_box_state": {
-                  "repr": "True",
-                  "type": "repr"
-                },
-                "namespace_cluster_spin_box_value": {
-                  "repr": "2",
-                  "type": "repr"
-                },
-                "quiet_check_box_state": {
-                  "repr": "True",
-                  "type": "repr"
-                },
-                "topic_filter_line_edit_text": {
-                  "repr": "'/'",
-                  "type": "repr"
-                },
-                "unreachable_check_box_state": {
-                  "repr": "True",
+                "vx_min": {
+                  "repr": "-1.0",
                   "type": "repr"
                 }
               },
@@ -121,13 +81,13 @@
             }
           }
         },
-        "plugin__rqt_tf_tree__RosTfTree__1": {
+        "plugin__rqt_topic__TopicPlugin__1": {
           "keys": {},
           "groups": {
-            "dock_widget__RosTfTreeUi": {
+            "dock_widget__TopicWidget": {
               "keys": {
                 "dock_widget_title": {
-                  "repr": "'TF Tree'",
+                  "repr": "'Topic Monitor'",
                   "type": "repr"
                 },
                 "dockable": {
@@ -143,13 +103,10 @@
             },
             "plugin": {
               "keys": {
-                "auto_fit_graph_check_box_state": {
-                  "repr": "True",
-                  "type": "repr"
-                },
-                "highlight_connections_check_box_state": {
-                  "repr": "True",
-                  "type": "repr"
+                "tree_widget_header_state": {
+                  "repr(QByteArray.hex)": "QtCore.QByteArray(b'000000ff0000000000000001000000010000000001000000000000000000000006200000000100000005000000c8000004d30000000601010001000000000000000006000000c8ffffffff000000810000000300000006000001340000000100000003000001ac0000000100000003000000c20000000100000003000000540000000100000003000000dd0000000100000003000000000000000100000003000003e800000000c8')",
+                  "type": "repr(QByteArray.hex)",
+                  "pretty-print": "                                                                                    "
                 }
               },
               "groups": {}

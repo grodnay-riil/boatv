@@ -6,8 +6,10 @@ from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    subscriber_launch = os.path.join(get_package_share_directory('vera_ui'), 'launch', 'subscriber.launch.py')
-    rviz_config = os.path.join(get_package_share_directory('vera_ui'), 'config', 'sbg.rviz')
+    package_dir=get_package_share_directory('vera_ui')
+    subscriber_launch = os.path.join(package_dir, 'launch', 'subscriber.launch.py')
+    rviz_config = os.path.join(package_dir, 'config', 'sbg.rviz')
+    rqt_perspective = os.path.join( package_dir,'config','sbg.perspective')
 
     return LaunchDescription([
         IncludeLaunchDescription(PythonLaunchDescriptionSource(subscriber_launch)),
@@ -19,6 +21,10 @@ def generate_launch_description():
         ),
         ExecuteProcess(
             cmd=['rviz2', '-d', rviz_config],
+            output='screen'
+        ),
+        ExecuteProcess(
+            cmd=['rqt', '--perspective-file', rqt_perspective],
             output='screen'
         )
     ])
