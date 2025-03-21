@@ -1,0 +1,39 @@
+{
+  
+  plugins: {
+    ros2dds: {
+      // nodename: "zenoh_bridge_ros2dds",
+      // namespace: "/",
+      allow: {
+         publishers: ["/sbg/ekf_quat"],
+         subscribers: ["*"],
+      },
+      pub_max_frequencies: ["/sbg/ekf_quat=10"],
+      // pub_priorities: ["/sbg/ekf_quat=1:express"],
+      // reliable_routes_blocking: true,
+    },
+  },
+
+  //// For a complete view of configuration possibilities, see https://github.com/eclipse-zenoh/zenoh/blob/main/DEFAULT_CONFIG.json5
+  // id: "1234567890abcdef",
+  mode: "client",
+  connect: {
+    timeout_ms: -1,  // Retry indefinitely
+    exit_on_failure: false,  // Continue trying in the background upon failure
+    },
+  scouting: {
+   multicast: {
+    enabled: false,
+    address: "224.0.0.224:7446",
+    interface: "auto", // If not set or set to "auto" the interface if picked automatically
+    autoconnect: { router: [], peer: ["router","peer"] },
+    listen: false,
+   },
+   gossip: {
+     enabled: false,
+     multihop: false,
+     autoconnect: { router: [], peer: ["router","peer"] },
+   },
+  },
+
+}

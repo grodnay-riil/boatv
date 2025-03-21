@@ -7,7 +7,7 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
     package_dir=get_package_share_directory('vera_ui')
-    subscriber_launch = os.path.join(package_dir, 'launch', 'subscriber.launch.py')
+    subscriber_launch = os.path.join(package_dir, 'launch', 'zenoh.launch.py')
     rviz_config = os.path.join(package_dir, 'config', 'sbg.rviz')
     rqt_perspective = os.path.join( package_dir,'config','sbg.perspective')
 

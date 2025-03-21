@@ -3,7 +3,7 @@
     <link name="base_link">
         <visual>
             <geometry>
-                <mesh filename="package://vera_description/meshes/base.dae" />
+                <mesh filename="package://vera_description/models/meshes/base.dae" />
             </geometry>
         </visual>
     </link>

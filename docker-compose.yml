@@ -26,9 +26,8 @@ services:
       - VERA_DOCKER_DIR=${VERA_DOCKER_DIR}
       - VERA_ROS_DIST=${VERA_ROS_DIST}
       - VERA_DOCKER_USER=${VERA_DOCKER_USER}
-      - VERA_ROS_DOMAIN_ID=${ROS_DOMAIN_ID}
+      - ROS_DOMAIN_ID=${VERA_DEFAULT_DOMAIN_ID}
       #- ROS_LOCALHOST_ONLY=1
-      #cyclone dds
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       - CYCLONEDDS_URI=file://${VERA_DOCKER_DIR}/cyclonedds.xml
        #Nvidia display magic
@@ -68,6 +67,8 @@ services:
   ui:
     extends:
       service: dev
+    environment:
+      - ROS_DOMAIN_ID=$VERA_HOST_DOMAIN_ID
     command: /bin/bash -c " \
             source ${VERA_DOCKER_DIR}/scripts/setup.bash && \
             source ${VERA_DOCKER_DIR}/install/setup.bash && \
@@ -76,6 +77,8 @@ services:
   hw:
     extends:
       service: dev
+    environment:
+      - ROS_DOMAIN_ID=$VERA_ROBOT_DOMAIN_ID
     command: /bin/bash -c " \
             source ${VERA_DOCKER_DIR}/scripts/setup.bash && \
             source ${VERA_DOCKER_DIR}/install/setup.bash && \
@@ -84,10 +87,22 @@ services:
   core:
     extends:
       service: dev
+    environment:
+      - ROS_DOMAIN_ID=$VERA_ROBOT_DOMAIN_ID
     command: /bin/bash -c " \
             source ${VERA_DOCKER_DIR}/scripts/setup.bash && \
             source ${VERA_DOCKER_DIR}/install/setup.bash && \
             ros2 launch vera_core ${VERA_MODEL}.launch.py"
     container_name: ${VERA_PROJECT_NAME}_core
+  sim:
+    extends:
+      service: dev
+    environment:
+      - ROS_DOMAIN_ID=$VERA_ROBOT_DOMAIN_ID
+    command: /bin/bash -c " \
+            source ${VERA_DOCKER_DIR}/scripts/setup.bash && \
+            source ${VERA_DOCKER_DIR}/install/setup.bash && \
+            ros2 launch vera_sim ${VERA_MODEL}.launch.py"
+    container_name: ${VERA_PROJECT_NAME}_sim
 
   
