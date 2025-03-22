@@ -11,6 +11,9 @@
   <depend>geometry_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>geographic_msgs</depend>
+  <depend>rosbridge_suite</depend>
+  <depend>rosbridge_server</depend>
+  <depend>web_video_server</depend>
   <!-- <depend>zenoh_bridge_dds</depend> We are using a standalone Zenoh client -->
 
   <test_depend>ament_copyright</test_depend>

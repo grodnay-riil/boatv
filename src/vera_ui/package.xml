@@ -12,7 +12,9 @@
   <depend>rqt_common_plugins</depend>
   <depend>rqt_tf_tree</depend>
   <depend>geographic_msgs</depend>
-
+  <depend>rosbridge_suite</depend>
+  <depend>rosbridge_server</depend>
+  <depend>web_video_server</depend>
   <!-- <depend>zenoh_bridge_dds</depend> --> <!-- We are using a stand alone verion -->
 
 
