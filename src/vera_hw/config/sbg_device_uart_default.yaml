@@ -12,7 +12,7 @@
 
     odometry:
       # Enable ROS odometry messages.
-      enable: false
+      enable: true
       # Publish odometry transforms.
       publishTf: true
       # Odometry frame IDs.
@@ -21,7 +21,7 @@
       initFrameId: "map"
 
     # Configuration of the device with ROS.
-    confWithRos: false
+    confWithRos: true
     
     # Uart configuration
     uartConf:
@@ -251,7 +251,7 @@
 
       # Ros standard output:
       # Note: If true publish ROS standard messages.
-      ros_standard: false
+      ros_standard: true
 
       # Frame convention:
       # Note: If true messages are expressed in the ENU convention.
@@ -263,7 +263,7 @@
       # Frame ID:
       # Note: If the frame convention is NED so the default frame ID is (imu_link_ned)
       #       else if the convention is ENU so the default frame ID is (imu_link)
-      frame_id: "imu_link_ned"
+      frame_id: "imu_link"
     
       # Status general, clock, com aiding, solution, heave
       log_status: 200
