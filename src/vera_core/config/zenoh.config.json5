@@ -5,7 +5,7 @@
       // nodename: "zenoh_bridge_ros2dds",
       // namespace: "/",
       allow: {
-         publishers: ["/position","/velocity","/orientation"],
+         publishers: ["/position","/velocity","/orientation","/navsatfix"],
          subscribers: ["/cmd_vel"],
       },
       pub_max_frequencies: ["/sbg/ekf_quat=10"],

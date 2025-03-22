@@ -1,3 +1,4 @@
-[submodule "third_party/vrx"]
-	path = third_party/vrx
-	url = git@github.com:osrf/vrx.git
+
+[submodule "src/third_party/rosboard"]
+	path = src/third_party/rosboard
+	url = git@github.com:dheera/rosboard.git

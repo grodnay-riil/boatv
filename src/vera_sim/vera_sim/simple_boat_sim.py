@@ -4,6 +4,7 @@ import tf_transformations
 from rclpy.node import Node
 from geometry_msgs.msg import Twist, Quaternion
 from geographic_msgs.msg import GeoPoint
+from sensor_msgs.msg import NavSatFix, NavSatStatus
 
 class SurfaceVehicleSimulator(Node):
     def __init__(self):
@@ -14,8 +15,8 @@ class SurfaceVehicleSimulator(Node):
         self.declare_parameter('waves_frequency', 0.5)    # Hz
         self.declare_parameter('current_x', 0.0)          # m/s
         self.declare_parameter('current_y', 0.0)          # m/s
-        self.declare_parameter('start_lat', 37.7749)      # Example: San Francisco latitude
-        self.declare_parameter('start_lon', -122.4194)    # Example: San Francisco longitude
+        self.declare_parameter('start_lat', 32.163721)      # Example: San Francisco latitude
+        self.declare_parameter('start_lon', 34.793327)    # Example: San Francisco longitude
         self.declare_parameter('max_v', 1.0)              # maximum velocity (m/s)
         
         # Retrieve parameters
@@ -31,6 +32,7 @@ class SurfaceVehicleSimulator(Node):
         self.position_pub = self.create_publisher(GeoPoint, 'position', 10)
         self.orientation_pub = self.create_publisher(Quaternion, 'orientation', 10)
         self.velocity_pub = self.create_publisher(Twist, 'velocity', 10)
+        self.navsatfix_pub = self.create_publisher(NavSatFix, 'navsatfix', 10)
         
         # Subscriber for cmd_vel
         self.cmd_vel_sub = self.create_subscription(Twist, 'cmd_vel', self.cmd_vel_callback, 10)
@@ -74,8 +76,9 @@ class SurfaceVehicleSimulator(Node):
         # Apply wave effects that influence roll and pitch only
         t = now.nanoseconds / 1e9
         roll = self.waves_amplitude * math.sin(2 * math.pi * self.waves_frequency * t)
-        # For pitch, apply a wave effect (at twice the frequency) and add a term proportional to x velocity ratio.
-        pitch =  (self.waves_amplitude * math.sin(2 * math.pi * self.waves_frequency * t * 2) - max(0,min(v / self.max_v, 1)) * math.pi*30/180)
+        # For pitch, apply a wave effect (at twice the frequency) and subtract a term proportional to velocity ratio.
+        pitch = (self.waves_amplitude * math.sin(2 * math.pi * self.waves_frequency * t * 2)
+                 - max(0, min(v / self.max_v, 1)) * math.pi * 30/180)
         
         # Convert Euler angles (roll, pitch, yaw) to quaternion using tf_transformations
         q_tuple = tf_transformations.quaternion_from_euler(roll, pitch, yaw) 
@@ -86,19 +89,34 @@ class SurfaceVehicleSimulator(Node):
         q_msg.w = q_tuple[3]
         self.orientation_pub.publish(q_msg)
 
-        # Convert local (x, y) displacements to geographic coordinates using pyproj
-      # Convert local (x, y) displacements to geographic coordinates
+        # Convert local (x, y) displacements to geographic coordinates
         # Approximation: 1 deg latitude ~ 111320 m; longitude factor depends on latitude
         meters_per_deg_lat = 111320.0
         meters_per_deg_lon = 111320.0 * math.cos(math.radians(self.start_lat))
         delta_lat = self.y / meters_per_deg_lat
         delta_lon = self.x / meters_per_deg_lon
         
+        # Publish GeoPoint (optional if you need both)
         geo = GeoPoint()
         geo.latitude = self.start_lat + delta_lat
         geo.longitude = self.start_lon + delta_lon
         geo.altitude = 0.0  # Assuming surface level
         self.position_pub.publish(geo)
+        
+        # Publish NavSatFix message
+        navsat_msg = NavSatFix()
+        navsat_msg.header.stamp = now.to_msg()
+        navsat_msg.header.frame_id = "map"
+        navsat_msg.latitude = self.start_lat + delta_lat
+        navsat_msg.longitude = self.start_lon + delta_lon
+        navsat_msg.altitude = 0.0
+        # Set a basic status for a valid fix (you may adjust these values)
+        navsat_msg.status.status = NavSatStatus.STATUS_FIX
+        navsat_msg.status.service = NavSatStatus.SERVICE_GPS
+        # Setting covariance to zero (unknown)
+        navsat_msg.position_covariance = [0.0] * 9
+        navsat_msg.position_covariance_type = NavSatFix.COVARIANCE_TYPE_UNKNOWN
+        self.navsatfix_pub.publish(navsat_msg)
 
         # Immediately publish the received velocity command unchanged
         self.velocity_pub.publish(self.last_cmd)

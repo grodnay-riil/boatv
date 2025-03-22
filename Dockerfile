@@ -30,9 +30,12 @@ RUN /bin/bash -c ' \
     echo -e "\033[33m apt-cacher-ng unavailable at http://${APT_PROXY_HOST}:${APT_PROXY_PORT}, using direct internet.\033[0m" >&2; \
     fi'
 # Install some useful tools
-RUN apt-get update && apt-get install -y iperf3 net-tools iputils-ping dnsutils iproute2 nload rsync inotify-tools libnotify-bin ssh \    
-    python3-colcon-clean tmux \
-    ros-humble-rviz2 ros-humble-common-interfaces ros-humble-rqt* \
+RUN apt-get update && apt-get install -y \
+    iperf3 net-tools iputils-ping dnsutils iproute2 nload rsync inotify-tools libnotify-bin ssh \    
+    tmux xclip \
+    python3-colcon-clean  \
+    ros-humble-rviz2 ros-humble-common-interfaces ros-humble-rqt* pip \
+    && pip install simplejpeg \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean -qq
 
