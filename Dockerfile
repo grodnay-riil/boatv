@@ -61,7 +61,7 @@ RUN mkdir -p /home/$VERA_DOCKER_USER/$VERA_PROJECT_NAME/src && \
     chown -R $VERA_DOCKER_UID:$VERA_DOCKER_GID  /home/$VERA_DOCKER_USER/.gz /home/$VERA_DOCKER_USER/.vscode-server /home/$VERA_DOCKER_USER/.ssh
 
 RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" |  tee -a /etc/apt/sources.list > /dev/null && \
-    apt update && apt install zenoh-bridge-ros2dds -y
+    apt-get update && apt-get install zenoh-bridge-ros2dds -y
 #Were done with root, switch to user
 USER $VERA_DOCKER_USER
 WORKDIR ${VERA_DOCKER_DIR}

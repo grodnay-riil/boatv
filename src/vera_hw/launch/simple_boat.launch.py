@@ -17,5 +17,10 @@ def generate_launch_description():
 			executable = 'sbg_device',
 			output = 'screen',
 			parameters = [config]
-		)
+		),
+  		Node(
+			package='vera_hw',
+			executable = 'sbg_publisher',
+			output = 'screen'		)
+  
 	])

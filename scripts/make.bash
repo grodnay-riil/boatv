@@ -20,7 +20,6 @@ if [[ "$1" == "--src-only" ]]; then
 fi
 
 source /opt/ros/$VERA_ROS_DIST/setup.bash
-
 # Run colcon build
 if [ "$BUILD_SRC_ONLY" = true ]; then
     echo "🚀 Starting colcon build (Only src/ packages)..."

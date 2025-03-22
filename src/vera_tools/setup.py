@@ -21,7 +21,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'sbg_tf_publisher = vera_tools.sbg_tf_publisher:main'
+            'tf_publisher = vera_tools.tf_publisher:main'
         ],
     },
 )

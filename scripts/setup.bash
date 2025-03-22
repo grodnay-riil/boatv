@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### --- GENERAL CONFIGURATION --- ###
-export VERA_MODEL=${VERA_MODEL:-sbg}
+export VERA_MODEL=${VERA_MODEL:-simple_boat}
 export VERA_ROS_DIST="humble"
 export ROS_LICENSE="© 2024 Skana Robotics Ltd. All rights reserved."
 export VERA_DEFAULT_DOMAIN_ID=$(ip -4 addr show | grep -oP '(?<=inet\s)10\.42\.0\.\d+' >/dev/null && echo $VERA_HOST_DOMAIN_ID || echo $VERA_ROBOT_DOMAIN_ID)

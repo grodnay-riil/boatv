@@ -8,7 +8,7 @@ def generate_launch_description():
         Node(
             package='vera_sim',  # Replace with your package name
             executable='simple_boat_sim',  # Your node's executable name
-            name='sbg_simulator',
+            name='simple_boat_sim',
             output='screen',
             parameters=[{
                 # Add parameters here if needed
