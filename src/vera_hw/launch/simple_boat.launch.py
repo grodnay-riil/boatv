@@ -22,5 +22,4 @@ def generate_launch_description():
 			package='vera_hw',
 			executable = 'sbg_publisher',
 			output = 'screen'		)
-  
 	])

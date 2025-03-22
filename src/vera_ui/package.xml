@@ -15,6 +15,13 @@
   <depend>rosbridge_suite</depend>
   <depend>rosbridge_server</depend>
   <depend>web_video_server</depend>
+  <depend>foxglove_bridge</depend>
+  <depend>foxglove_compressed_video_transport</depend>
+  <depend>foxglove_msgs</depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher_gui</exec_depend>
+
+
   <!-- <depend>zenoh_bridge_dds</depend> --> <!-- We are using a stand alone verion -->
 
 

@@ -2,6 +2,7 @@ import math
 import rclpy
 import tf_transformations
 from rclpy.node import Node
+from rclpy.duration import Duration
 from geometry_msgs.msg import Twist, Quaternion
 from geographic_msgs.msg import GeoPoint
 from sensor_msgs.msg import NavSatFix, NavSatStatus
@@ -15,9 +16,9 @@ class SurfaceVehicleSimulator(Node):
         self.declare_parameter('waves_frequency', 0.5)    # Hz
         self.declare_parameter('current_x', 0.0)          # m/s
         self.declare_parameter('current_y', 0.0)          # m/s
-        self.declare_parameter('start_lat', 32.163721)      # Example: San Francisco latitude
-        self.declare_parameter('start_lon', 34.793327)    # Example: San Francisco longitude
-        self.declare_parameter('max_v', 1.0)              # maximum velocity (m/s)
+        self.declare_parameter('start_lat', 32.163721)      # Starting latitude
+        self.declare_parameter('start_lon', 34.793327)    # Starting longitude
+        self.declare_parameter('max_v', 1.0)              # Maximum velocity (m/s)
         
         # Retrieve parameters
         self.waves_amplitude = self.get_parameter('waves_amplitude').value
@@ -45,20 +46,26 @@ class SurfaceVehicleSimulator(Node):
         # Store the last received cmd_vel (default is zero velocities)
         self.last_cmd = Twist()
         self.last_time = self.get_clock().now()
+        self.last_cmd_time = self.get_clock().now()  # Added to track last cmd_vel timestamp
         
         # Timer callback for simulation updates (20 Hz)
         self.timer = self.create_timer(0.05, self.timer_callback)
     
     def cmd_vel_callback(self, msg: Twist):
-        # Update the last received command velocity
+        # Update the last received command velocity and the timestamp
         self.last_cmd = msg
+        self.last_cmd_time = self.get_clock().now()
     
     def timer_callback(self):
-        # Calculate elapsed time (dt)
         now = self.get_clock().now()
         dt = (now - self.last_time).nanoseconds / 1e9
         self.last_time = now
 
+        # Check if no cmd_vel has been received within the last 1 second.
+        if (now - self.last_cmd_time) > Duration(seconds=1.0):
+            #self.get_logger().warn("No /cmd_vel received in the last second. Resetting velocity to zero.")
+            self.last_cmd = Twist()  # Reset velocity to zero
+        
         # Get commanded velocities
         v = self.last_cmd.linear.x   # forward velocity in m/s
         w = self.last_cmd.angular.z  # angular velocity in rad/s
@@ -76,50 +83,41 @@ class SurfaceVehicleSimulator(Node):
         # Apply wave effects that influence roll and pitch only
         t = now.nanoseconds / 1e9
         roll = self.waves_amplitude * math.sin(2 * math.pi * self.waves_frequency * t)
-        # For pitch, apply a wave effect (at twice the frequency) and subtract a term proportional to velocity ratio.
         pitch = (self.waves_amplitude * math.sin(2 * math.pi * self.waves_frequency * t * 2)
                  - max(0, min(v / self.max_v, 1)) * math.pi * 30/180)
         
         # Convert Euler angles (roll, pitch, yaw) to quaternion using tf_transformations
         q_tuple = tf_transformations.quaternion_from_euler(roll, pitch, yaw) 
         q_msg = Quaternion()
-        q_msg.x = q_tuple[0]
-        q_msg.y = q_tuple[1]
-        q_msg.z = q_tuple[2]
-        q_msg.w = q_tuple[3]
+        q_msg.x, q_msg.y, q_msg.z, q_msg.w = q_tuple
         self.orientation_pub.publish(q_msg)
 
         # Convert local (x, y) displacements to geographic coordinates
-        # Approximation: 1 deg latitude ~ 111320 m; longitude factor depends on latitude
         meters_per_deg_lat = 111320.0
         meters_per_deg_lon = 111320.0 * math.cos(math.radians(self.start_lat))
         delta_lat = self.y / meters_per_deg_lat
         delta_lon = self.x / meters_per_deg_lon
         
-        # Publish GeoPoint (optional if you need both)
         geo = GeoPoint()
         geo.latitude = self.start_lat + delta_lat
         geo.longitude = self.start_lon + delta_lon
         geo.altitude = 0.0  # Assuming surface level
         self.position_pub.publish(geo)
         
-        # Publish NavSatFix message
         navsat_msg = NavSatFix()
         navsat_msg.header.stamp = now.to_msg()
         navsat_msg.header.frame_id = "map"
         navsat_msg.latitude = self.start_lat + delta_lat
         navsat_msg.longitude = self.start_lon + delta_lon
         navsat_msg.altitude = 0.0
-        # Set a basic status for a valid fix (you may adjust these values)
         navsat_msg.status.status = NavSatStatus.STATUS_FIX
         navsat_msg.status.service = NavSatStatus.SERVICE_GPS
-        # Setting covariance to zero (unknown)
         navsat_msg.position_covariance = [0.0] * 9
         navsat_msg.position_covariance_type = NavSatFix.COVARIANCE_TYPE_UNKNOWN
         self.navsatfix_pub.publish(navsat_msg)
 
-        # Immediately publish the received velocity command unchanged
         self.velocity_pub.publish(self.last_cmd)
+        # Uncomment the next line to log simulation state:
         # self.get_logger().info(f"Simulated state: x={self.x:.2f}, y={self.y:.2f}, theta={self.theta:.2f}")
 
 def main(args=None):
