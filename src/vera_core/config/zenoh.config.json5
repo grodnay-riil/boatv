@@ -1,14 +1,14 @@
 {
-  
+  //For a complete view of configuration possibilities, https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds/blob/main/DEFAULT_CONFIG.json5
   plugins: {
     ros2dds: {
       // nodename: "zenoh_bridge_ros2dds",
       // namespace: "/",
       allow: {
-         publishers: ["/position","/velocity","/orientation","/navsatfix"],
+         publishers: ["/imu/.*"],
          subscribers: ["/cmd_vel"],
       },
-      pub_max_frequencies: ["/sbg/ekf_quat=10"],
+      pub_max_frequencies: ["/imu/.*=10"],
       // pub_priorities: ["/sbg/ekf_quat=1:express"],
       // reliable_routes_blocking: true,
     },

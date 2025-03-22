@@ -3,14 +3,15 @@ import os
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Quaternion
+from sensor_msgs.msg import Imu
 from tf2_ros import TransformBroadcaster, TransformStamped
 
 class TFPublisherNode(Node):
     def __init__(self):
         super().__init__('tf_publisher_node')
         self.subscription = self.create_subscription(
-            Quaternion,
-            '/orientation',
+            Imu,
+            '/imu/data',
             self.orientation_callback,
             10
         )
@@ -18,17 +19,17 @@ class TFPublisherNode(Node):
         self.tf_broadcaster = TransformBroadcaster(self)
         self.get_logger().info("TF Publisher Node has been started.")
         
-    def orientation_callback(self, msg: Quaternion):
+    def orientation_callback(self, msg: Imu):
         t = TransformStamped()
         t.header.frame_id = 'map'
         t.child_frame_id = 'base_link'
         # Use current time for the timestamp
         t.header.stamp = self.get_clock().now().to_msg()  
         # Set rotation from the incoming quaternion message
-        t.transform.rotation.x = msg.x
-        t.transform.rotation.y = msg.y
-        t.transform.rotation.z = msg.z
-        t.transform.rotation.w = msg.w
+        t.transform.rotation.x = msg.orientation.x
+        t.transform.rotation.y = msg.orientation.y
+        t.transform.rotation.z = msg.orientation.z
+        t.transform.rotation.w = msg.orientation.w
         # Set translation to zero (if desired)
         t.transform.translation.x = 0.0
         t.transform.translation.y = 0.0
